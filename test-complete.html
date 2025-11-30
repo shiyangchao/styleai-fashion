@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>功能测试 - StyleAI</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background: #3B82F6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover {
+            background: #2563EB;
+        }
+        .result {
+            background: #f0f9ff;
+            border: 1px solid #0ea5e9;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 10px;
+            white-space: pre-wrap;
+        }
+        .error {
+            background: #fef2f2;
+            border: 1px solid #ef4444;
+            color: #dc2626;
+        }
+        .success {
+            background: #f0fdf4;
+            border: 1px solid #22c55e;
+            color: #16a34a;
+        }
+    </style>
+</head>
+<body>
+    <h1>StyleAI 功能测试页面</h1>
+    
+    <div class="test-section">
+        <h2>🧪 网站功能测试</h2>
+        <button class="test-button" onclick="testWebsiteAccess()">测试网站访问</button>
+        <button class="test-button" onclick="testImageUpload()">测试图片上传功能</button>
+        <button class="test-button" onclick="testManualForm()">测试手工填写功能</button>
+        <button class="test-button" onclick="openMainSite()">打开主网站</button>
+        <button class="test-button" onclick="clearResults()">清除结果</button>
+        <div id="testResults" class="result" style="display:none;"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>📋 错误排查指南</h2>
+        <h3>如果遇到问题，请按以下步骤排查：</h3>
+        <ol>
+            <li><strong>打开浏览器开发者工具（F12）</strong></li>
+            <li><strong>查看Console标签页</strong></li>
+            <li><strong>观察是否有红色错误信息</strong></li>
+            <li><strong>刷新页面，重新测试功能</strong></li>
+        </ol>
+        
+        <h3>常见问题：</h3>
+        <ul>
+            <li><strong>图片上传失败：</strong>检查文件格式（仅支持JPG、PNG）和大小（不超过10MB）</li>
+            <li><strong>手工填写无反应：</strong>确保所有必填字段都已填写</li>
+            <li><strong>推荐结果不显示：</strong>检查网络连接和浏览器兼容性</li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h2>🔍 当前状态</h2>
+        <div id="statusInfo">
+            <p>网站地址: <a href="http://localhost:9000/" target="_blank">http://localhost:9000/</a></p>
+            <p>当前时间: <span id="currentTime"></span></p>
+            <p>脚本状态: <span id="scriptStatus">检查中...</span></p>
+        </div>
+    </div>
+
+    <script>
+        // 更新状态信息
+        function updateStatus() {
+            document.getElementById('currentTime').textContent = new Date().toLocaleString();
+            
+            // 检查脚本是否加载
+            const scriptStatus = document.querySelector('script[src*="script-complete"]') ? 
+                '✅ 已加载' : '❌ 未找到';
+            document.getElementById('scriptStatus').textContent = scriptStatus;
+        }
+        
+        setInterval(updateStatus, 1000);
+        updateStatus();
+
+        // 测试函数
+        function showResult(message, isError = false) {
+            const results = document.getElementById('testResults');
+            results.style.display = 'block';
+            results.className = 'result ' + (isError ? 'error' : 'success');
+            results.textContent = message;
+        }
+
+        function clearResults() {
+            document.getElementById('testResults').style.display = 'none';
+        }
+
+        async function testWebsiteAccess() {
+            try {
+                const response = await fetch('http://localhost:9000/');
+                const status = response.ok ? '✅ 网站访问正常' : '❌ 网站访问失败';
+                showResult(`${status}\n状态码: ${response.status}\n响应时间: 正常`);
+            } catch (error) {
+                showResult(`❌ 网站访问失败\n错误: ${error.message}`, true);
+            }
+        }
+
+        function testImageUpload() {
+            const message = `🖼️ 图片上传功能测试
+            
+1. 请访问主网站: http://localhost:9000/
+2. 点击"拖拽图片至此或点击上传"
+3. 选择一张图片文件（支持JPG、PNG，最大10MB）
+4. 观察是否出现"图片上传成功"提示
+5. 等待3秒，检查是否开始分析过程
+
+如果遇到问题，请：
+- 检查浏览器控制台是否有错误信息
+- 确保图片格式正确
+- 尝试刷新页面重试`;
+            
+            showResult(message);
+        }
+
+        function testManualForm() {
+            const message = `📝 手工填写功能测试
+            
+1. 请访问主网站: http://localhost:9000/
+2. 点击"或手动填写您的特征"
+3. 填写所有必填字段：
+   - 年龄段: 选择一个选项
+   - 身高: 选择一个选项  
+   - 身材类型: 选择一个选项
+   - 肤色: 选择一个选项
+   - 脸型: 选择一个选项
+   - 风格偏好: 选择一个选项
+4. 点击"开始分析"按钮
+5. 观察是否出现推荐结果
+
+如果遇到问题，请：
+- 检查所有必填字段都已填写
+- 查看浏览器控制台错误信息
+- 确保网络连接正常`;
+            
+            showResult(message);
+        }
+
+        function openMainSite() {
+            window.open('http://localhost:9000/', '_blank');
+        }
+    </script>
+</body>
+</html>
