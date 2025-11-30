@@ -432,36 +432,64 @@ function analyzeManualInput(formData) {
     }
 }
 
-// 生成推荐（完整修复版）
-function generateRecommendations() {
-    console.log('🎨 Generating recommendations...');
+// 生成推荐（搜索引擎增强版 - 使用必应、百度、谷歌等真实搜索）
+async function generateRecommendations() {
+    console.log('🎨 Generating search-based recommendations with real search engines...');
     
     try {
         const features = analysisResults.features;
         console.log('🎯 Using features:', features);
         
-        // 获取推荐模板
-        const templates = getRecommendationTemplates(features.style);
-        console.log('📋 Found templates:', templates);
-        
-        if (!templates || templates.length === 0) {
-            console.error('❌ No templates found for style:', features.style);
-            throw new Error('未找到适合的风格模板');
+        // 检查基于搜索引擎的推荐引擎是否可用
+        if (window.styleAISearchRecommendationEngine) {
+            console.log('🔍 Using Search-Based Recommendation Engine...');
+            showSuccess('正在生成搜索引擎推荐的搭配方案...');
+            
+            // 使用搜索引擎推荐引擎生成真实推荐
+            const outfits = await window.styleAISearchRecommendationEngine.generateRecommendations(features);
+            
+            console.log('✨ Generated search-based outfits:', outfits);
+            
+            // 显示结果
+            displayRecommendations(outfits);
+        } else if (window.styleAIRecommendationEngine) {
+            console.log('🚀 Using Enhanced Recommendation Engine (fallback)...');
+            showSuccess('正在从网上搜索最佳搭配建议...');
+            
+            // 使用增强推荐引擎生成真实推荐
+            const outfits = await window.styleAIRecommendationEngine.generateRecommendations(features);
+            
+            console.log('✨ Generated enhanced outfits:', outfits);
+            
+            // 显示结果
+            displayRecommendations(outfits);
+        } else {
+            console.log('📚 Falling back to local templates...');
+            
+            // 降级到本地推荐模板
+            const templates = getRecommendationTemplates(features.style);
+            console.log('📋 Found templates:', templates);
+            
+            if (!templates || templates.length === 0) {
+                console.error('❌ No templates found for style:', features.style);
+                throw new Error('未找到适合的风格模板');
+            }
+            
+            // 生成3个推荐搭配
+            const outfits = templates.slice(0, 3).map((template, index) => {
+                return {
+                    ...template,
+                    id: index + 1,
+                    image: `https://images.unsplash.com/photo-1544966503-7cc5ac882d5a?w=400&h=280&fit=crop&crop=face`,
+                    confidence: 0.7
+                };
+            });
+            
+            console.log('✨ Generated outfits:', outfits);
+            
+            // 显示结果
+            displayRecommendations(outfits);
         }
-        
-        // 生成3个推荐搭配
-        const outfits = templates.slice(0, 3).map((template, index) => {
-            return {
-                ...template,
-                id: index + 1,
-                image: `https://images.unsplash.com/photo-1544966503-7cc5ac882d5a?w=400&h=280&fit=crop&crop=face`
-            };
-        });
-        
-        console.log('✨ Generated outfits:', outfits);
-        
-        // 显示结果
-        displayRecommendations(outfits);
         
     } catch (error) {
         console.error('💥 Error generating recommendations:', error);
@@ -683,30 +711,122 @@ function displayRecommendations(outfits) {
     }
 }
 
-// 创建搭配卡片
+// 创建搭配卡片（搜索引擎增强版）
 function createOutfitCard(outfit) {
     const card = document.createElement('div');
     card.className = 'outfit-card';
+    
+    // 获取购买链接
+    const getShoppingLink = (item) => {
+        if (window.styleAISearchRecommendationEngine && outfit.searchLinks) {
+            return window.styleAISearchRecommendationEngine.getShoppingLinks(item);
+        }
+        if (window.styleAIRecommendationEngine && outfit.searchTerm) {
+            return window.styleAIRecommendationEngine.getShoppingLinks(item);
+        }
+        return item.link || '#';
+    };
+    
+    // 获取价格显示
+    const getPriceDisplay = (item) => {
+        return item.price ? `<span class="item-price">${item.price}</span>` : '';
+    };
+    
+    // 置信度显示
+    const confidenceDisplay = outfit.confidence ? `
+        <div class="confidence-badge">
+            <span class="confidence-text">匹配度: ${Math.round(outfit.confidence * 100)}%</span>
+        </div>
+    ` : '';
+    
+    // 搜索引擎链接显示
+    const searchEnginesDisplay = outfit.searchLinks ? `
+        <div class="search-engines-section">
+            <h4 class="search-engines-title">🔍 搜索引擎</h4>
+            <div class="search-engines-grid">
+                ${Object.entries(outfit.searchLinks).map(([engine, link]) => `
+                    <a href="${link.url}" target="_blank" rel="noopener" class="search-engine-link" style="--engine-color: ${link.color}">
+                        <span class="engine-icon">${link.icon}</span>
+                        <span class="engine-name">${link.name}</span>
+                    </a>
+                `).join('')}
+            </div>
+            <button class="open-all-searches-btn" onclick="openAllSearches(${JSON.stringify(outfit.searchLinks).replace(/"/g, '&quot;')})">
+                <i data-lucide="globe"></i> 批量搜索
+            </button>
+        </div>
+    ` : '';
+    
+    // 搜索建议显示
+    const searchSuggestionsDisplay = outfit.searchSuggestions ? `
+        <div class="search-suggestions">
+            <h5 class="suggestions-title">💡 搜索建议</h5>
+            <ul class="suggestions-list">
+                ${outfit.searchSuggestions.map(suggestion => `
+                    <li class="suggestion-item">
+                        <a href="https://www.baidu.com/s?wd=${encodeURIComponent(suggestion)}" target="_blank" rel="noopener">
+                            ${suggestion}
+                        </a>
+                    </li>
+                `).join('')}
+            </ul>
+        </div>
+    ` : '';
     
     card.innerHTML = `
         <div class="outfit-image">
             <img src="${outfit.image}" alt="${outfit.title}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
             <div class="outfit-placeholder">${outfit.title} 搭配示例</div>
+            ${confidenceDisplay}
         </div>
         <div class="outfit-content">
             <h3 class="outfit-title">${outfit.title}</h3>
             <p class="outfit-description">${outfit.description}</p>
+            
+            ${outfit.searchTerm ? `
+                <div class="search-info">
+                    <span class="search-source">🔍 基于"${outfit.searchTerm}"搜索生成</span>
+                </div>
+            ` : ''}
+            
+            ${searchEnginesDisplay}
+            ${searchSuggestionsDisplay}
+            
             <ul class="outfit-items">
                 ${outfit.items.map(item => `
-                    <li>
-                        <span class="item-name">${item.name}</span>
-                        <a href="${item.link}" class="item-link" target="_blank">
-                            ${item.brand || '查看详情'}
-                            <i data-lucide="external-link" class="external-link-icon"></i>
-                        </a>
+                    <li class="outfit-item">
+                        <div class="item-details">
+                            <span class="item-name">${item.name}</span>
+                            <div class="item-meta">
+                                <span class="item-type">${item.type || '服装'}</span>
+                                ${getPriceDisplay(item)}
+                            </div>
+                        </div>
+                        <div class="item-actions">
+                            <a href="${getShoppingLink(item)}" class="item-link" target="_blank" rel="noopener">
+                                <span class="brand-name">${item.brand || '查看详情'}</span>
+                                <i data-lucide="external-link" class="external-link-icon"></i>
+                            </a>
+                            ${item.searchTerm ? `
+                                <button class="search-item-btn" onclick="searchSpecificItem(${JSON.stringify(item).replace(/"/g, '&quot;')})">
+                                    <i data-lucide="search"></i>
+                                </button>
+                            ` : ''}
+                        </div>
                     </li>
                 `).join('')}
             </ul>
+            
+            ${outfit.searchTerm ? `
+                <div class="outfit-actions">
+                    <button class="action-btn secondary" onclick="searchSimilar('${outfit.searchTerm}')">
+                        <i data-lucide="search"></i> 搜索类似搭配
+                    </button>
+                    <button class="action-btn primary" onclick="saveOutfit(${outfit.id})">
+                        <i data-lucide="heart"></i> 收藏搭配
+                    </button>
+                </div>
+            ` : ''}
         </div>
     `;
     

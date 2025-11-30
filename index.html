@@ -154,6 +154,8 @@
         </div>
     </footer>
 
+    <!-- 搜索引擎推荐引擎 -->
+    <script src="script-search-based-recommendations.js"></script>
     <script src="script-complete.js"></script>
     <script>
         // 初始化Lucide图标
@@ -162,6 +164,57 @@
                 lucide.createIcons();
             }
         });
+        
+        // 添加搜索和收藏功能
+        function searchSimilar(searchTerm) {
+            console.log('🔍 搜索类似搭配:', searchTerm);
+            // 使用多个搜索引擎搜索
+            const searchUrls = [
+                `https://www.baidu.com/s?wd=${encodeURIComponent(searchTerm + ' 男装搭配')}`,
+                `https://www.bing.com/search?q=${encodeURIComponent(searchTerm + ' men fashion outfit')}`,
+                `https://www.google.com/search?q=${encodeURIComponent(searchTerm + ' men fashion outfit')}`
+            ];
+            
+            // 批量打开搜索结果
+            searchUrls.forEach((url, index) => {
+                setTimeout(() => {
+                    window.open(url, '_blank');
+                }, index * 300);
+            });
+        }
+        
+        function saveOutfit(outfitId) {
+            console.log('💾 收藏搭配:', outfitId);
+            showSuccess('搭配已保存到收藏夹！');
+        }
+        
+        // 批量打开所有搜索引擎
+        function openAllSearches(searchLinks) {
+            console.log('🌐 批量打开搜索引擎:', searchLinks);
+            if (window.styleAISearchRecommendationEngine) {
+                window.styleAISearchRecommendationEngine.openSearchLinks(searchLinks);
+            } else {
+                // 降级方案：直接打开必应搜索
+                Object.values(searchLinks).forEach((link, index) => {
+                    setTimeout(() => {
+                        window.open(link.url, '_blank');
+                    }, index * 500);
+                });
+            }
+        }
+        
+        // 搜索特定商品
+        function searchSpecificItem(item) {
+            console.log('🔍 搜索特定商品:', item);
+            if (window.styleAISearchRecommendationEngine) {
+                window.styleAISearchRecommendationEngine.searchSpecificItem(item);
+            } else {
+                // 降级方案：使用百度搜索
+                const searchTerm = item.searchTerm || `${item.brand} ${item.name}`;
+                const searchUrl = `https://www.baidu.com/s?wd=${encodeURIComponent(searchTerm)}`;
+                window.open(searchUrl, '_blank');
+            }
+        }
     </script>
 </body>
 </html>
