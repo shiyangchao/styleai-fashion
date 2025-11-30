@@ -1,0 +1,186 @@
+{
+  "name": "styleai",
+  "version": "2.0.0",
+  "description": "StyleAI - 智能男士造型顾问网站",
+  "main": "index.html",
+  "scripts": {
+    "dev": "live-server --port=3000 --open=/index.html",
+    "build": "npm run minify-css && npm run minify-js",
+    "minify-css": "cleancss -o styles.min.css styles.css",
+    "minify-js": "terser script.js -o script.min.js -c -m",
+    "deploy:vercel": "vercel --prod",
+    "deploy:netlify": "netlify deploy --prod --dir .",
+    "deploy:surge": "surge . styleai.surge.sh",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lighthouse": "lighthouse http://localhost:3000 --output=html --output-path=./lighthouse-report.html",
+    "optimize-images": "imagemin *.png --out-dir=./optimized --plugin=pngquant",
+    "check-a11y": "pa11y http://localhost:3000"
+  },
+  "keywords": [
+    "ai",
+    "styling",
+    "fashion",
+    "men",
+    "outfit",
+    "recommendation",
+    "pwa",
+    "offline"
+  ],
+  "author": "MiniMax Agent",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/username/styleai.git"
+  },
+  "bugs": {
+    "url": "https://github.com/username/styleai/issues"
+  },
+  "homepage": "https://styleai.example.com",
+  "devDependencies": {
+    "live-server": "^1.2.2",
+    "clean-css-cli": "^5.6.2",
+    "terser": "^5.19.2",
+    "lighthouse": "^10.4.0",
+    "pa11y": "^6.2.3",
+    "imagemin": "^8.0.1",
+    "imagemin-pngquant": "^9.0.2"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie 11"
+  ],
+  "files": [
+    "index.html",
+    "styles.css",
+    "script.js",
+    "manifest.json",
+    "sw.js",
+    "README.md"
+  ],
+  "config": {
+    "port": 3000,
+    "host": "localhost"
+  },
+  "pwa": {
+    "name": "StyleAI",
+    "short_name": "StyleAI",
+    "description": "智能男士造型顾问",
+    "theme_color": "#0A2540",
+    "background_color": "#ffffff",
+    "display": "standalone",
+    "orientation": "portrait",
+    "status_bar": "black",
+    "icons": [
+      {
+        "src": "icon-192x192.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      },
+      {
+        "src": "icon-512x512.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ],
+    "splash": {
+      "640x1136": "splash-640x1136.png",
+      "750x1334": "splash-750x1334.png",
+      "828x1792": "splash-828x1792.png",
+      "1125x2436": "splash-1125x2436.png",
+      "1242x2208": "splash-1242x2208.png",
+      "1242x2688": "splash-1242x2688.png",
+      "1536x2048": "splash-1536x2048.png",
+      "1668x2224": "splash-1668x2224.png",
+      "1668x2388": "splash-1668x2388.png",
+      "1668x2388": "splash-1668x2388.png",
+      "2048x2732": "splash-2048x2732.png"
+    }
+  },
+  "deployment": {
+    "vercel": {
+      "framework": null,
+      "buildCommand": "npm run build",
+      "outputDirectory": ".",
+      "installCommand": "npm install",
+      "devCommand": "npm run dev"
+    },
+    "netlify": {
+      "buildCommand": "npm run build",
+      "publishDirectory": ".",
+      "functionsDirectory": "netlify/functions"
+    },
+    "github-pages": {
+      "sourceBranch": "main",
+      "deployBranch": "gh-pages"
+    }
+  },
+  "seo": {
+    "title": "StyleAI - 智能男士造型顾问",
+    "description": "通过AI智能分析，为您量身定制专业男士搭配建议",
+    "keywords": "男士搭配,AI造型,服装推荐,时尚顾问,智能搭配",
+    "author": "MiniMax Agent",
+    "language": "zh-CN",
+    "robots": "index, follow",
+    "googleAnalytics": "GA_TRACKING_ID"
+  },
+  "security": {
+    "contentSecurityPolicy": {
+      "default-src": "'self'",
+      "script-src": "'self' 'unsafe-inline' https://unpkg.com",
+      "style-src": "'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "font-src": "'self' https://fonts.gstatic.com",
+      "img-src": "'self' data: https:",
+      "connect-src": "'self'"
+    },
+    "headers": {
+      "X-Frame-Options": "DENY",
+      "X-Content-Type-Options": "nosniff",
+      "Referrer-Policy": "strict-origin-when-cross-origin",
+      "Permissions-Policy": "camera=(), microphone=(), geolocation=()"
+    }
+  },
+  "performance": {
+    "budgets": [
+      {
+        "path": "/*",
+        "timings": [
+          {
+            "metric": "first-contentful-paint",
+            "maximum": 1800
+          },
+          {
+            "metric": "largest-contentful-paint",
+            "maximum": 2500
+          },
+          {
+            "metric": "cumulative-layout-shift",
+            "maximum": 0.1
+          }
+        ],
+        "resourceSizes": [
+          {
+            "resourceType": "script",
+            "maximum": 170
+          },
+          {
+            "resourceType": "image",
+            "maximum": 100
+          },
+          {
+            "resourceType": "font",
+            "maximum": 100
+          },
+          {
+            "resourceType": "css",
+            "maximum": 50
+          }
+        ]
+      }
+    ]
+  }
+}

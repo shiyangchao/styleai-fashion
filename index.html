@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StyleAI - 智能男士造型顾问</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">Your Personal AI Stylist</h1>
+            <p class="hero-subtitle">通过AI智能分析，为您量身定制专业男士搭配建议</p>
+            
+            <!-- Upload Area -->
+            <div class="upload-container">
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-content">
+                        <i data-lucide="upload-cloud" class="upload-icon"></i>
+                        <p class="upload-text">拖拽图片至此或点击上传</p>
+                        <p class="upload-hint">支持 JPG、PNG 格式，文件大小不超过 10MB</p>
+                    </div>
+                    <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                </div>
+                
+                <div class="manual-input-link">
+                    <a href="#" id="manualInputBtn">或手动填写您的特征</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Manual Input Section -->
+    <section class="manual-input-section" id="manualInputSection" style="display: none;">
+        <div class="container">
+            <h2 class="section-title">请填写您的基本信息</h2>
+            <form class="manual-form" id="manualForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="age">年龄段</label>
+                        <select id="age" name="age" required>
+                            <option value="">请选择年龄段</option>
+                            <option value="18-25">18-25岁</option>
+                            <option value="26-30">26-30岁</option>
+                            <option value="31-35">31-35岁</option>
+                            <option value="36-40">36-40岁</option>
+                            <option value="40+">40岁以上</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="height">身高</label>
+                        <select id="height" name="height" required>
+                            <option value="">请选择身高</option>
+                            <option value="165-170">165-170cm</option>
+                            <option value="170-175">170-175cm</option>
+                            <option value="175-180">175-180cm</option>
+                            <option value="180-185">180-185cm</option>
+                            <option value="185+">185cm以上</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="bodyType">身材类型</label>
+                        <select id="bodyType" name="bodyType" required>
+                            <option value="">请选择身材类型</option>
+                            <option value="slim">偏瘦型</option>
+                            <option value="normal">标准型</option>
+                            <option value="muscular">肌肉型</option>
+                            <option value="full-figured">偏胖型</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="skinTone">肤色</label>
+                        <select id="skinTone" name="skinTone" required>
+                            <option value="">请选择肤色</option>
+                            <option value="fair">白皙</option>
+                            <option value="medium">自然</option>
+                            <option value="olive">橄榄色</option>
+                            <option value="dark">小麦色</option>
+                            <option value="deep">深色</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="faceShape">脸型</label>
+                        <select id="faceShape" name="faceShape" required>
+                            <option value="">请选择脸型</option>
+                            <option value="round">圆脸</option>
+                            <option value="oval">椭圆脸</option>
+                            <option value="square">方脸</option>
+                            <option value="heart">心形脸</option>
+                            <option value="long">长脸</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="style">偏好风格</label>
+                        <select id="style" name="style" required>
+                            <option value="">请选择风格偏好</option>
+                            <option value="business">商务正装</option>
+                            <option value="casual">休闲舒适</option>
+                            <option value="smart-casual">商务休闲</option>
+                            <option value="trendy">时尚潮流</option>
+                            <option value="classic">经典复古</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="occupation">职业类型（可选）</label>
+                    <input type="text" id="occupation" name="occupation" placeholder="例如：金融、互联网、教育等">
+                </div>
+
+                <button type="submit" class="submit-btn">开始分析</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Loading Section -->
+    <section class="loading-section" id="loadingSection" style="display: none;">
+        <div class="container">
+            <div class="loading-content">
+                <div class="spinner"></div>
+                <h3 class="loading-title">AI正在分析您的特征...</h3>
+                <p class="loading-text">请稍候，我们正在为您生成个性化搭配方案</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results Section -->
+    <section class="results-section" id="resultsSection" style="display: none;">
+        <div class="container">
+            <h2 class="section-title">为您推荐的搭配方案</h2>
+            <p class="results-subtitle">基于您的特征分析，我们为您精心挑选了以下搭配</p>
+            
+            <div class="outfits-grid" id="outfitsGrid">
+                <!-- Outfit cards will be dynamically inserted here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 StyleAI. 由 MiniMax Agent 开发。</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

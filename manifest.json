@@ -1,0 +1,128 @@
+{
+    "name": "StyleAI - 智能男士造型顾问",
+    "short_name": "StyleAI",
+    "description": "通过AI智能分析，为您量身定制专业男士搭配建议",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#0A2540",
+    "orientation": "portrait-primary",
+    "scope": "/",
+    "lang": "zh-CN",
+    "categories": ["lifestyle", "shopping", "fashion"],
+    "icons": [
+        {
+            "src": "/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
+        {
+            "src": "/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
+        {
+            "src": "/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "/screenshot-wide.png",
+            "sizes": "1280x800",
+            "type": "image/png",
+            "form_factor": "wide",
+            "label": "StyleAI 桌面版界面"
+        },
+        {
+            "src": "/screenshot-narrow.png",
+            "sizes": "720x1280",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "StyleAI 移动版界面"
+        }
+    ],
+    "shortcuts": [
+        {
+            "name": "手动填写",
+            "short_name": "填写特征",
+            "description": "快速填写个人特征进行搭配分析",
+            "url": "/#manual",
+            "icons": [
+                {
+                    "src": "/shortcut-manual.png",
+                    "sizes": "96x96",
+                    "type": "image/png"
+                }
+            ]
+        },
+        {
+            "name": "上传图片",
+            "short_name": "图片上传",
+            "description": "上传照片进行AI分析",
+            "url": "/#upload",
+            "icons": [
+                {
+                    "src": "/shortcut-upload.png",
+                    "sizes": "96x96",
+                    "type": "image/png"
+                }
+            ]
+        }
+    ],
+    "prefer_related_applications": false,
+    "related_applications": [],
+    "edge_side_panel": {
+        "preferred_width": 400
+    },
+    "protocol_handlers": [
+        {
+            "protocol": "web+styleai",
+            "url": "/?style=%s"
+        }
+    ],
+    "share_target": {
+        "action": "/share-target/",
+        "method": "GET",
+        "params": {
+            "title": "title",
+            "text": "text",
+            "url": "url"
+        }
+    },
+    "file_handlers": [
+        {
+            "action": "/",
+            "accept": {
+                "image/*": [".jpg", ".jpeg", ".png", ".gif", ".webp"]
+            }
+        }
+    ],
+    "handle_links": "preferred",
+    "launch_handler": {
+        "client_mode": "navigate-existing"
+    },
+    "display_override": ["window-controls-overlay", "standalone", "fullscreen"],
+    "id": "/",
+    "launch_url": "/",
+    "scope_extensions": [
+        {
+            "origin": "https://api.styleai.example.com"
+        }
+    ],
+    "capture_links": "new-client",
+    "file_system_access": {
+        "accepts": [
+            {
+                "description": "用户可以上传自己的照片进行分析",
+                "accept": {
+                    "image/*": [".jpg", ".jpeg", ".png", ".gif", ".webp"]
+                }
+            }
+        ]
+    }
+}
